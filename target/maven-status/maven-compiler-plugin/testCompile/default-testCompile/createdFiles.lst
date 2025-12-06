@@ -1,0 +1,9 @@
+com\assignment\tests\EmployerPostJobTest.class
+com\assignment\tests\LogoutTest.class
+com\assignment\tests\UIElementsTest.class
+com\assignment\tests\EmployerDeleteJobTest.class
+com\assignment\tests\JobSeekerCheckStatusTest.class
+com\assignment\tests\EmployerViewApplicationsTest.class
+com\assignment\tests\LoginTest.class
+com\assignment\tests\JobSeekerSearchJobTest.class
+com\assignment\tests\EmployerEditJobTest.class

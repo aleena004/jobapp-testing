@@ -12,7 +12,7 @@ pipeline {
             steps {
                 echo '📦 Checking out code from GitHub...'
                 git branch: 'main', 
-                    url: 'https://github.com/YOUR-USERNAME/YOUR-REPO.git'
+                    url: 'https://github.com/aleena004/jobapp-testing.git'
                 sh 'ls -la'
             }
         }

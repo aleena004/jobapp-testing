@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # Web Application (Job Portal)
+  web-app:
+    image: nginx:alpine
+    container_name: job-portal-app
+    ports:
+      - "8081:80"        # Different from Part I
+    volumes:
+      - ./src:/usr/share/nginx/html  # Volume for code (REQUIREMENT)
+    networks:
+      - job-portal-network
+    restart: unless-stopped
+
+  # Database
+  mysql-db:
+    image: mysql:8.0
+    container_name: job-portal-db
+    ports:
+      - "3307:3306"      # Different from Part I
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: jobportal
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - job-portal-network
+
+  # Selenium Hub
+  selenium-hub:
+    image: selenium/hub:4.15.0
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"
+    networks:
+      - job-portal-network
+
+  # Chrome Node
+  chrome-node:
+    image: selenium/node-chrome:4.15.0
+    container_name: selenium-chrome
+    depends_on:
+      - selenium-hub
+    environment:
+      SE_EVENT_BUS_HOST: selenium-hub
+      SE_EVENT_BUS_PUBLISH_PORT: 4442
+      SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
+      SE_NODE_MAX_SESSIONS: 4
+    volumes:
+      - /dev/shm:/dev/shm
+    networks:
+      - job-portal-network
+
+networks:
+  job-portal-network:
+    driver: bridge
+
+volumes:
+  mysql_data:

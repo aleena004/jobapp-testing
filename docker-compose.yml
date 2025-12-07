@@ -1,62 +1,35 @@
 version: '3.8'
 
 services:
-  # Web Application (Job Portal)
-  web-app:
+  job-portal-web:
     image: nginx:alpine
-    container_name: job-portal-app
+    container_name: job-portal-app-assignment
     ports:
-      - "8081:80"        # Different from Part I
+      - "8081:80"
     volumes:
-      - ./src:/usr/share/nginx/html  # Volume for code (REQUIREMENT)
+      - ./web-app:/usr/share/nginx/html
     networks:
-      - job-portal-network
-    restart: unless-stopped
+      - assignment-network
 
-  # Database
-  mysql-db:
-    image: mysql:8.0
-    container_name: job-portal-db
-    ports:
-      - "3307:3306"      # Different from Part I
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: jobportal
-      MYSQL_USER: appuser
-      MYSQL_PASSWORD: apppass
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - job-portal-network
-
-  # Selenium Hub
   selenium-hub:
     image: selenium/hub:4.15.0
-    container_name: selenium-hub
+    container_name: selenium-hub-assignment
     ports:
       - "4444:4444"
     networks:
-      - job-portal-network
+      - assignment-network
 
-  # Chrome Node
   chrome-node:
     image: selenium/node-chrome:4.15.0
-    container_name: selenium-chrome
+    container_name: chrome-node-assignment
     depends_on:
       - selenium-hub
     environment:
       SE_EVENT_BUS_HOST: selenium-hub
-      SE_EVENT_BUS_PUBLISH_PORT: 4442
-      SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
-      SE_NODE_MAX_SESSIONS: 4
-    volumes:
-      - /dev/shm:/dev/shm
     networks:
-      - job-portal-network
+      - assignment-network
+    shm_size: 2gb
 
 networks:
-  job-portal-network:
+  assignment-network:
     driver: bridge
-
-volumes:
-  mysql_data:
